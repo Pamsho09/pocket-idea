@@ -21,17 +21,17 @@ const CardPocket = styled.div<any>`
   }
 `;
 interface IProps {
-  title: string;
+  name: string;
   onClick?: () => void;
-  total?: number;
+  numberOfIdeas?: number;
   complated?: number;
-  bg: string;
+  colors: string;
 }
-function CardsPocket({ title, onClick, total, complated, bg }: IProps) {
+function CardsPocket({ name, onClick, numberOfIdeas, complated, colors }: IProps) {
   return (
-    <CardPocket bg={bg}>
+    <CardPocket bg={colors}>
       <span className="title">
-        {title} {complated}/{total}
+        {name} {complated}/{numberOfIdeas}
       </span>
     </CardPocket>
   );

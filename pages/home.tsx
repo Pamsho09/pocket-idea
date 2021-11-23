@@ -1,11 +1,11 @@
-import React ,{useContext}from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import Container from "../components/generic/Container";
-import useUser from "../hook/useUser";
 import styled from "styled-components";
 import Button from "../components/generic/Button";
 import CardsPocket from "../components/CardsPocket";
 import { AppContext } from "../context/AppContext";
-import { logout } from "../firebase/config";
+import {  logout } from "../firebase/config";
+import useUser from "../hook/useUser";
 const HomeC = styled.div`
   width: 100%;
   height: 100vh;
@@ -48,34 +48,40 @@ const HomeC = styled.div`
   }
 `;
 function Home() {
+  const { setModal, state, setPockets }: any = useContext(AppContext);
   const user: any = useUser();
-  const {state,setModal}:any=useContext(AppContext);
+  useEffect(() => {
+    user && setPockets(user.id)
+  }, [user])
   return (
     <Container>
       <HomeC>
         {" "}
         <h2 className="logo">Pocket Idea</h2>
-        <h3 className="user">Hi {user && user.username}</h3>
+        <h3 className="user">Hi {user&&user.username}</h3>
         <div className="buttonContainer">
           <Button
-            action={() => setModal({isOpen:true,content:'createPocket'})}
+            action={() =>{
+              console.log("click")
+              setModal({ isOpen: true, content: 'createPocket' })
+            }}
             type="primary"
             label="create pocket"
             radius="true"
           />
         </div>
         <div className="containerCards">
-          {state.pocket.map((item:any) => {
+          {state.pocket.map((item: any) => {
             return <CardsPocket key={item.id} {...item} />;
           })}
         </div>
-        <Button action={()=>{
+        <Button action={() => {
           logout();
-        }} type="secondary" label="LOg out" radius="true"/>
-  
+        }} type="secondary" label="LOg out" radius="true" />
+
       </HomeC>
-       </Container>
+    </Container>
   );
 }
 
-export default Home;
+export default React.memo(Home);

@@ -16,11 +16,10 @@ export default function useUser() {
   }, []);
 
   useEffect(() => {
-    console.log("useUser", user);
     if (router.pathname !== "/singin") {
       user === USER_STATES.NOT_LOGGED && router.push("/loging");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [user]);
 
   

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { loginWithGoogle, onAuthStateChanged ,logingWithEmail} from "../firebase/config";
 import { useRouter } from "next/router";
-import useUser, { USER_STATES } from "../hook/useUser";
 import Input from "../components/generic/Input";
 import Container from "../components/generic/Container";
 import styled from "styled-components";
 import Button from "../components/generic/Button";
+import { AppContext } from "../context/AppContext";
+import useUser, { USER_STATES } from "../hook/useUser";
 const LoginC = styled.div`
   width: 100%;
   height: 100vh;
@@ -42,12 +43,13 @@ const LoginC = styled.div`
 `;
 function Loging() {
   const user = useUser();
-  const router = useRouter();
+const router = useRouter();
 
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const {state}:any=useContext(AppContext);
   useEffect(() => {
     user && router.replace("/home");
   }, [router, user]);

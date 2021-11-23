@@ -1,9 +1,9 @@
 import React,{useContext} from 'react'
+import { Toaster } from 'react-hot-toast'
 import styled ,{
 createGlobalStyle}from 'styled-components'
 import { AppContext } from '../../context/AppContext'
 import Modal from '../modal/Modal'
-
 const ContainerC = styled.div`
 width: 100%;
 height: 100vh;
@@ -29,6 +29,7 @@ function Container({children}:JSX.ElementChildrenAttribute) {
             {
 state.modal.isOpen && <Modal/>
             }
+            <Toaster/>
             <GlobalStyle></GlobalStyle>
         </ContainerC>
     )

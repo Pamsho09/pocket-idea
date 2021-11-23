@@ -1,42 +1,74 @@
 import { useState } from "react";
-const initialState = {
+import toast from "react-hot-toast";
+import { createData, getPockets } from "../firebase/config";
+export interface IinitState {
+  modal: IModal
+  pocket: IPocket[]
+
+}
+export interface IPocket {
+  id: string
+  name: string
+  colors: string
+  numberOfIdeas: number
+  userId?: string
+}
+export interface IModal {
+  isOpen: boolean,
+  content: string
+}
+export interface IuserId {
+  id: string
+  username: string
+}
+export interface IUseInitialState {
+  state: IinitState
+  setModal: (payload: IModal) => void
+  setPocket: (payload: IPocket) => void
+  setPockets: (payload: string) => void
+}
+const initialState: IinitState = {
   modal: {
-    isOpen: true,
+    isOpen: false,
     content: "",
   },
-  pocket: [
-    {
-      id: 1,
-      title: "title",
-      total: 10,
-      complated: 5,
-      bg: "red",
-    },
-
-    {
-      id: 2,
-      title: "projects for stream",
-      total: 10,
-      compalted: 5,
-      bg: "blue",
-    },
-    {
-      id: 3,
-      title: "video tiktok",
-      total: 10,
-      compalted: 5,
-      bg: "green",
-    },
-  ],
+  pocket: []
 };
-export const useInitialState = () => {
+export const useInitialState = (): IUseInitialState => {
   const [state, setState] = useState(initialState);
 
-  const setModal = (payload: { isOpen: boolean; content: string }) => {
+  const setModal = (payload: IModal) => {
+    console.log("setModal", payload);
     setState({
       ...state,
-      modal: payload,
+      modal: { ...payload },
     });
   };
-  return { state,setModal };
+
+
+  const setPocket = (payload: IPocket) => {
+    toast.promise(
+      createData('pocket', {
+        ...payload,
+      }),
+      {
+        loading: 'Saving...',
+        success: 'Pocket created',
+        error: 'Error creating pocket',
+       }
+     );
+   
+
+  }
+const setPockets = (payload: string) => {
+  getPockets(payload).then((res: any) => {
+    setState({
+      ...state,
+      pocket: [...res]
+    })
+  })
+
+}
+
+return { state, setModal, setPocket, setPockets };
 };

@@ -6,6 +6,7 @@ import CreatePocket from "./CreatePocket";
 const ModalContainer = styled.div`
   width: 100%;
   height: 100vh;
+  z-index: 100;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.5);
   display: grid;
@@ -40,8 +41,7 @@ function Modal() {
         modal.component = () => (
         <CreatePocket
           action={(c: any) => {
-            console.log(c);
-            setColor(c.hex);
+            setModal({ isOpen: false, content: "" });
           }}
         />
       );

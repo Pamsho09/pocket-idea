@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled from "styled-components";
 
 interface IProps {
@@ -52,4 +52,4 @@ function Button({ label, type,radius,action }: IProps) {
   return <ButtonC type={type} radius={radius} onClick={action}>{label}</ButtonC>;
 }
 
-export default Button;
+export default React.memo(Button);
