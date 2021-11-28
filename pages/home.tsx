@@ -6,6 +6,7 @@ import CardsPocket from "../components/CardsPocket";
 import { AppContext } from "../context/AppContext";
 import {  logout } from "../firebase/config";
 import useUser from "../hook/useUser";
+import { useRouter } from "next/router";
 const HomeC = styled.div`
   width: 100%;
   height: 100vh;
@@ -53,6 +54,11 @@ function Home() {
   useEffect(() => {
     user && setPockets(user.id)
   }, [user])
+const router= useRouter()
+  const handleClick = (id:string) => {
+    router.push(`/pocket/${id}`)
+
+  }
   return (
     <Container>
       <HomeC>
@@ -62,7 +68,6 @@ function Home() {
         <div className="buttonContainer">
           <Button
             action={() =>{
-              console.log("click")
               setModal({ isOpen: true, content: 'createPocket' })
             }}
             type="primary"
@@ -72,7 +77,9 @@ function Home() {
         </div>
         <div className="containerCards">
           {state.pocket.map((item: any) => {
-            return <CardsPocket key={item.id} {...item} />;
+            return <CardsPocket key={item.id} {...item} onClick={
+              handleClick
+            } />;
           })}
         </div>
         <Button action={() => {

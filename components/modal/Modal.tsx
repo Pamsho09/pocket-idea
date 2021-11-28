@@ -2,6 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import { AppContext } from "../../context/AppContext";
+import CreateIdea from "./CreateIdea";
 import CreatePocket from "./CreatePocket";
 const ModalContainer = styled.div`
   width: 100%;
@@ -45,6 +46,14 @@ function Modal() {
           }}
         />
       );
+      break;
+    case "createIdea":
+      modal.component = () => <CreateIdea action={(c: any) => {
+        setModal({ isOpen: false, content: "" });
+      }}
+      
+    />
+    break;
   }
   return (
     <ModalContainer color={color}>

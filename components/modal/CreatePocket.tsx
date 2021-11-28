@@ -48,6 +48,7 @@ function CreatePocket({ action }: any) {
     }
     else {
       setPocket({...form,userId: user.id})
+      action()
     }
 
   }

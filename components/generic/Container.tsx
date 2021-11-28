@@ -4,7 +4,7 @@ import styled ,{
 createGlobalStyle}from 'styled-components'
 import { AppContext } from '../../context/AppContext'
 import Modal from '../modal/Modal'
-const ContainerC = styled.div`
+const ContainerC = styled.div<any>`
 width: 100%;
 height: 100vh;
 display: flex;
@@ -13,16 +13,18 @@ align-items: center;
 justify-content: center;
 padding: 33px;
 overflow: scroll;
+background:${props => props.bg||''};
 `
 const GlobalStyle = createGlobalStyle`
 padding: 0;
 margin: 0;
 font-family: 'Roboto', sans-serif;
 `
-function Container({children}:JSX.ElementChildrenAttribute) {
+function Container({children,bg}:any) {
+    console.log(bg)
   const {state}:any= useContext(AppContext)
     return (
-        <ContainerC>
+        <ContainerC bg={bg}>
             {
                 children
             }

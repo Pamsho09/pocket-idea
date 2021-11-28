@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 interface IProps {
   label?: string;
-  action?: () => void|null;
+  action?: () => void | null;
   type?: string;
   radius?: string;
+  customStyle?: any;
 }
 const typeButton: any = {
   primary: {
@@ -28,7 +29,7 @@ const ButtonC = styled.div<IProps>`
     typeButton[props.type || "primary"].background};
   border-radius: 50px;
   font-family: Roboto;
-  font-style: normal;
+
   font-weight: bold;
   font-size: 13px;
   line-height: 15px;
@@ -41,15 +42,24 @@ const ButtonC = styled.div<IProps>`
   ${(props: IProps) =>
     props.type === "secondary" &&
     `
-    border: 2px solid #000000;
+    background:transparent;
+    border: 2px solid #fff;
 box-sizing: border-box;
-border-radius: 50px;`}
-curso: pointer;
+border-radius: 50px;
+color: #fff;
+
+`}
+  curso: pointer;
   ${(props: IProps) => props.radius && `border-radius: 4px;`}
+  ${(props: IProps) => props?.customStyle}
 `;
 
-function Button({ label, type,radius,action }: IProps) {
-  return <ButtonC type={type} radius={radius} onClick={action}>{label}</ButtonC>;
+function Button({ label, type, radius, action,customStyle }: IProps) {
+  return (
+    <ButtonC type={type} radius={radius} onClick={action} customStyle={customStyle||''}>
+      {label}
+    </ButtonC>
+  );
 }
 
 export default React.memo(Button);
