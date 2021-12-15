@@ -58,15 +58,12 @@ interface IProps{
 function CarouselComponent({action}:IProps) {
   const { state ,setSelectedIdea}: any = useContext(AppContext);
   const [ideas,setIdeas]:any = useState(null);
-  const [item, setItem] = useState(null);
-  const [count, setCount] = useState(0);
+  const [item, setItem]:any = useState(null);
+  const [count, setCount]: any = useState(0);
   const [random, setRandom]: any = useState(null);
-  const [isOpen, setIsOpen] = useState(true);
-  const [timer, setTimer] = useState(0);
-
-
+  const [isOpen, setIsOpen]: any = useState(true);
+  const [timer, setTimer]: any = useState(0);
   useEffect(() => {
-
     setIdeas(state.pocketSelected.ideas.filter((item:any) => !item.selected));
   } ,[state])
   if (random === null && ideas) {
@@ -81,7 +78,6 @@ function CarouselComponent({action}:IProps) {
       } else {
         setCount(count + 1);
       }
-
       if (timer >= 5000 && count === random) {
         setTimer(0);
         setIsOpen(false);
