@@ -12,6 +12,7 @@ body{
 margin: auto;
 overflow: hidden;
 position: relative;
+height: auto;
 }
 `
 function MyApp({ Component, pageProps }: AppProps) {
