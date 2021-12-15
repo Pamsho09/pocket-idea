@@ -25,8 +25,12 @@
     "@types/react-color": "^3.0.6",
     "@types/react-slick": "^0.23.7",
     "@types/styled-components": "^5.1.15",
-    "eslint": "7",
+    "eslint": "7.32.0",
     "eslint-config-next": "12.0.4",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
     "typescript": "4.4.4"
   }
 }

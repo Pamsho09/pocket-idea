@@ -76,15 +76,18 @@ const router= useRouter()
           />
         </div>
         <div className="containerCards">
-          {state.pocket.map((item: any) => {
-            return <CardsPocket key={item.id} {...item} onClick={
+          {user && state.pocket.map((item: any) => {
+            return <CardsPocket key={item.id} userId={user.id } {...item} onClick={
               handleClick
             } />;
           })}
         </div>
         <Button action={() => {
           logout();
-        }} type="secondary" label="LOg out" radius="true" />
+        }} type="secondary" label="LOg out" radius="true"  customStyle={`
+        color:#272829;
+        
+        `} />
 
       </HomeC>
     </Container>

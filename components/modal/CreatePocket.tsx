@@ -34,7 +34,7 @@ function CreatePocket({ action }: any) {
   const { setPocket
   } = state
   const user: any = useUser();
-  const [form, setForm] = React.useState({
+  const [form, setForm] = useState({
     name: '',
     colors: '',
     numberOfIdeas: 0,

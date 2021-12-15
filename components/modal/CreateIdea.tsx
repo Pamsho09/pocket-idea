@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import Input from "../generic/Input";
 import { CirclePicker } from "react-color";
@@ -33,7 +33,7 @@ function CreateIdea({ action }: any) {
    
   const { setIdea ,state }:any = useContext(AppContext);
   const user: any = useUser();
-  const [form, setForm] = React.useState({
+  const [form, setForm] = useState({
     title: "",
     description: "",
 

@@ -2,9 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import {
   createData,
+  deleteIdea,
+  deletePocket,
   getIdeas,
   getPocket,
   getPockets,
+  updateData,
 } from "../firebase/config";
 export interface IinitState {
   modal: IModal;
@@ -12,6 +15,7 @@ export interface IinitState {
   pocketSelected: {
     pocket: IPocket;
     ideas: IIdea[];
+    lastIdea?: IIdea|null;
   };
 }
 export interface IPocket {
@@ -34,6 +38,7 @@ export interface IIdea {
   title: string;
   description: string;
   pocketId: string;
+  selected: boolean;
 }
 export interface IUseInitialState {
   state: IinitState;
@@ -42,6 +47,9 @@ export interface IUseInitialState {
   setPockets: (payload: string) => void;
   setIdeas: (payload: string) => void;
   setIdea: (payload: IIdea) => void;
+  deleteIdeaState: (payload: string) => void;
+  deletePocketState: (payload: string,userId:string) => void;
+  setSelectedIdea: (payload: string) => void;
 }
 const initialState: IinitState = {
   modal: {
@@ -57,6 +65,7 @@ const initialState: IinitState = {
       numberOfIdeas: 0,
       userId: "",
     },
+    lastIdea: null,
     ideas: [],
   },
 };
@@ -117,11 +126,11 @@ export const useInitialState = (): IUseInitialState => {
         });
       })})
   }
-
   const setIdea = (payload: IIdea) => {
     toast.promise(
       createData("ideas", {
         ...payload,
+        selected: false,
       }).then(()=>{
         setIdeas(payload.pocketId);
       }),
@@ -133,6 +142,52 @@ export const useInitialState = (): IUseInitialState => {
     );
    
   };
+  const deleteIdeaState = (payload: string) => {
+    console.log("deleteIdeaState", payload);
+    toast.promise(
+      deleteIdea(payload).then(()=>{
+        setIdeas(state.pocketSelected.pocket.id);
+      }),
+      {
+        loading: "Saving...",
+        success: "Idea deleted",
+        error: "Error deleting idea",
+      }
+    );
+   
+  }
+  const deletePocketState = (payload: string,userId:string) => {
+    console.log("deletePocketState", payload);
+    toast.promise(
+      deletePocket(payload).then(()=>{
+        setPockets(userId);
+      }),
+      {
+        loading: "Saving...",
+        success: "Pocket deleted",
+        error: "Error deleting pocket",
+      }
+    );
+   
+  }
+ const setSelectedIdea = (payload: string) => {
+   console.log("setSelectedIdea", payload);
+   toast.promise(
+    updateData("ideas",payload,{
+      selected:true
+    }).then(()=>{
+      setIdeas(state.pocketSelected.pocket.id);
+    }),
+    {
+      loading: "Saving...",
+      success: "Idea selected",
+      error: "Error selecting idea",
+    }
+   )
+    
+   
+  }
+  return { state, setModal, setPocket, setPockets, setIdea, setIdeas,deleteIdeaState ,deletePocketState,setSelectedIdea};
 
-  return { state, setModal, setPocket, setPockets, setIdea, setIdeas };
+  
 };

@@ -1,102 +1,139 @@
-import React, { useEffect, useState,useRef } from "react";
-import { Carousel } from "react-responsive-carousel";
-import styled from "styled-components";
-import { isNull } from "util";
+import React, { useContext, useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { AppContext } from "../context/AppContext";
+import { useInterval } from "../hook/useInterval";
 import CardsIdea from "./CardsIdea";
+
 const CarouselContainer = styled.div<any>`
-  overflow-x: scroll;
-  display: flex;
-  gap: 2em;
-  height: 330px;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  .container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    display: grid;
+    place-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 1s ease;
+    .close {
+      position: absolute;
+      width: 40px;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+    .carousel {
+      width: 100%;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      justify-content: center;
+    }
+    .buttons {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
 
-    align-items: center;
+      .button {
+        width: 30px;
+        height: auto;
 
-  .container{
-    width: auto;
-    display: flex;
-  gap: 2em;
-  ${(props) => props.customStyle}
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
-
 `;
-function CarouselComponent({ ideas, show }: any) {
-  const [index, setIndex] = useState(0);
-  const [length, setLength] = useState(ideas.length);
-  const [isRepeating, setIsRepeating] = useState(ideas.length > show);
-  const [touchPosition, setTouchPosition] = useState(null);
-  const [translate, setTranslate] = useState('');
-  const [ideasState, setIdeas] = useState(ideas);
+interface IProps{
+  action:()=>void
+}
+function CarouselComponent({action}:IProps) {
+  const { state ,setSelectedIdea}: any = useContext(AppContext);
+  const [ideas,setIdeas]:any = useState(null);
+  const [item, setItem] = useState(null);
+  const [count, setCount] = useState(0);
+  const [random, setRandom]: any = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
+  const [timer, setTimer] = useState(0);
+
 
   useEffect(() => {
-    setLength(ideas.length);
-    setIsRepeating(ideas.length > show);
-  }, [ideas, show]);
 
-  const handleTouchStart = (e: any) => {
-    setTouchPosition(e.touches[0].clientX);
-    console.log(e)
-  };
-  const next = () => {
-    index < length - show && setIndex(index + 1);
-  };
-  const prev = () => {
-    index > 0 && setIndex(index - 1);
-  };
-  const scrollRef:any = useRef(null);
-  const handleTouchMove = (e: any) => {
-    if (touchPosition) {
-      if(e.target.offsetLeft >1000){
-        console.log(e.touches[0].clientX)
-        console.log('estoy en el final')
-      setIdeas([...ideasState, ...ideasState]);
-      }
-      let diff = touchPosition - e.touches[0].clientX;
-      if (diff>5) {
-        next();
-      }
-      if (diff<-5) {
-        prev();
-      }
-      setTouchPosition(null);
-    }
-  };
-  const handleTransitionEnd = () => {
-    
-      if (index === 0) {
-        setIndex(length);
-      } else if (index === length + show) {
-        setIndex(show);
-      }
-    
-  };
-  const renderExtraPrev = () => {
-    let output = [];
-    for (let indexLocal = 0; indexLocal < show; indexLocal++) {
-      output.push(ideas[length - 1 - indexLocal]);
-    }
-    output.reverse();
-    return output;
-  };
+    setIdeas(state.pocketSelected.ideas.filter((item:any) => !item.selected));
+  } ,[state])
+  if (random === null && ideas) {
+    setRandom(Math.floor(Math.random() * (ideas.length - 1)));
+  }
+  useInterval(
+    () => {
+      setItem(ideas[count]);
 
-  const renderExtraNext = () => {
-    let output = [];
-    for (let indexLocal = 0; indexLocal < show; indexLocal++) {
-      output.push(ideas[indexLocal]);
-    }
-    return output;
+      if (count === ideas.length - 1) {
+        setCount(0);
+      } else {
+        setCount(count + 1);
+      }
+
+      if (timer >= 5000 && count === random) {
+        setTimer(0);
+        setIsOpen(false);
+      } else {
+        setTimer(timer + 300);
+      }
+    },
+    isOpen ? 100 : null
+  );
+  useEffect(() => {
+  
+  }, [])
+  console.log({
+    random: random,
+    pocketSelected: ideas,
+    count: count,
+  });
+  const handleSelected = () => {
+
+    setSelectedIdea(ideas[count].id);
+    action();
+  }
+  const ಠ_ರೃ = () => {
+    setRandom(null);
+    setTimer(0);
+    setIsOpen(true);
   };
-console.log(ideas)
   return (
-    <CarouselContainer
-     customStyle={translate}
-      
-    >
-    <Carousel >
-    {ideasState.map((item: any) => {
-    
-    return <CardsIdea key={item.id} label={item.title}></CardsIdea>;
-  })}
-    </Carousel>
+    <CarouselContainer>
+      <div className="container">
+        <div className="carousel">
+          {item && (
+            <CardsIdea
+              key={item.id}
+              id={item.id}
+              label={item.title}
+            ></CardsIdea>
+          )}
+        </div>
+        {!isOpen && (
+          <div className="buttons">
+            <div className="button">
+              <img src="/icons/retry.svg" alt="" onClick={ಠ_ರೃ} />
+            </div>
+            <div>
+              <div className="button" onClick={handleSelected}>
+                <img src="/icons/check.svg" alt="" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </CarouselContainer>
   );
 }

@@ -18,15 +18,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/pagination"
-import "swiper/css/navigation"
-
-
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 // import Swiper core and required modules
-import SwiperCore, {
-  EffectCards
-} from 'swiper';
+import SwiperCore, { EffectCards } from "swiper";
+import CarouselComponent from "../../components/Carousel";
 
 // install Swiper modules
 SwiperCore.use([EffectCards]);
@@ -60,29 +57,25 @@ const HomeC = styled.div<any>`
     gap: 3.2em;
   }
 
-
-
   .swiper {
-  width: 100%;
-  height: 320px;
-}
+    width: 100%;
+    height: 320px;
+  }
 
-.swiper-slide {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #fff;
-}
-.swiper-slide-shadow{
-  border-radius: 18px;
-display: none;
-}
-
-
-`
+  .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .swiper-slide-shadow {
+    border-radius: 18px;
+    display: none;
+  }
+`;
 
 function Index() {
   const { setModal, state, setIdeas }: any = useContext(AppContext);
@@ -97,6 +90,7 @@ function Index() {
   console.log(pocketSelected.pocket.colors);
   const refScroll = useRef(null);
   const [touchPosition, setTouchPosition] = useState(0);
+  const [play , setPlay] = useState(false);
   const handleScroll = (e: any) => {
     // console.log(e.touches[0].clientX);
   };
@@ -104,26 +98,33 @@ function Index() {
     console.log(e.touches);
     setTouchPosition(e.touches[0].clientX);
   };
-  const [thumbsSwiper, setThumbsSwiper]:any = useState(null);
+  const [thumbsSwiper, setThumbsSwiper]: any = useState(null);
   var settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
   };
+  const handleChangePlay = () => {
+    setPlay(!play);
+  }
   return (
     <Container bg={pocketSelected.pocket.colors}>
       <HomeC>
         {" "}
         <h2 className="logo">Pocket Idea</h2>
-        <h3 className="user">{user && pocketSelected.pocket.name}</h3>
+        <h3 className="user">{user && pocketSelected.pocket.name} </h3>
         <div className="buttonContainer">
           <Button
-            action={() => {}}
+            action={() => {
+              pocketSelected.ideas.filter((idea:any)=> !idea.selected).length>0 && setPlay(true);
+              
+            }}
             type="primary"
             label="Play"
             radius="true"
+            
             customStyle={`
             background-color:#fff;
             color:${pocketSelected.pocket.colors};
@@ -139,18 +140,20 @@ function Index() {
             radius="true"
           />
         </div>
-        <Swiper    effect={"cards"}  className="mySwiper">
-    
-    {pocketSelected.ideas.map((item: any) => (
-            
-            <SwiperSlide key={item.id} ><CardsIdea key={item.id} label={item.title}></CardsIdea>
-            </SwiperSlide>           
-              
-        ))}
-  </Swiper>
+        <Swiper effect={"cards"} className="mySwiper">
+          {pocketSelected.ideas.map((item: any) => (
+            <SwiperSlide key={item.id}>
+              <CardsIdea
+              show={true}
+                key={item.id}
+                id={item.id}
+                label={item.title}
+                state={item.selected}
 
-         
-     
+              ></CardsIdea>
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <Button
           action={() => {
             logout();
@@ -160,6 +163,10 @@ function Index() {
           radius="true"
         />
       </HomeC>
+    
+    {
+       pocketSelected.ideas.filter((idea:any)=> !idea.selected).length>0 && play  &&   <CarouselComponent action={handleChangePlay} />
+    }
     </Container>
   );
 }

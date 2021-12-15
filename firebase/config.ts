@@ -1,4 +1,3 @@
-import { create } from "domain";
 import * as firebase from "firebase";
 import toast from "react-hot-toast";
 
@@ -152,12 +151,14 @@ export const getIdeas = (id: string) => {
       const {
         title,
         description,
+        selected
        
       } = doc.data();
       return {
         id: doc.id.toString(),
         title,
         description,
+        selected
       };
     });;
     return data;
@@ -165,4 +166,43 @@ export const getIdeas = (id: string) => {
   .catch((err) => {
     toast.error(err.message);
   });
+}
+
+export const deleteIdea = (id: string) => {
+  return db
+    .collection("ideas")
+    .doc(id)
+    .delete()
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    });
+
+}
+export const deletePocket = (id: string) => {
+  return db
+    .collection("pocket")
+    .doc(id)
+    .delete()
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    });
+}
+
+export const updateData=  (collection: string, id: string, data: any) => {
+  return db
+    .collection(collection)
+    .doc(id)
+    .update(data)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    });
 }

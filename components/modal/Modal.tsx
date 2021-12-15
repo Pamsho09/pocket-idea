@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { AppContext } from "../../context/AppContext";
 import CreateIdea from "./CreateIdea";
@@ -25,18 +25,16 @@ const ModalContainer = styled.div`
       width: 40px;
       top: 10px;
       right: 10px;
-      curson: pointer;
+      cursor: pointer;
     }
   }
 `;
 function Modal() {
-  const [color, setColor] = React.useState("#fff");
-  const { state, setModal }: any = React.useContext(AppContext);
-
+  const [color, setColor] = useState("#fff");
+  const { state, setModal }: any = useContext(AppContext);
   let modal:any ={
     component:()=><h1>Loading</h1>,
   }
-
   switch (state.modal.content) {
     case "createPocket":
         modal.component = () => (

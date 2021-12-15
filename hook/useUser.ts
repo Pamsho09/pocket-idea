@@ -17,7 +17,7 @@ export default function useUser() {
 
   useEffect(() => {
     if (router.pathname !== "/singin") {
-      user === USER_STATES.NOT_LOGGED && router.push("/loging");
+      user === USER_STATES.NOT_LOGGED && router.push("/login");
     }
 
   }, [user]);
